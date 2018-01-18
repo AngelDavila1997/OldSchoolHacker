@@ -11,12 +11,17 @@ public class Hacker : MonoBehaviour {
     //Class attributes
     //These arrays will hold the password of the different game's levels
     string[] level1Passwords = { "book", "class", "teacher", "room", "hour" };
+
+    string[] answers1 = {"shelf", "elf", "on", "the", "aa"};
+
     string[] level2Passwords = { "cashier", "department", "payment", "electronics"};
     string[] level3Passwords = { "dossier", "international", "security", "terrorism"};
 
     //Here I declare an enumerated type to represent the different game states
     //and I declare a variable to hold the current game state
     int level;
+    int position; //Whatever it is in this position is going to be the answer
+    string answer;
     bool play = false;
     enum GameState {MainMenu, Password, Win}; //Refactor
     GameState currentScreen = GameState.MainMenu;
@@ -81,7 +86,7 @@ public class Hacker : MonoBehaviour {
 
     void CheckPassword(string input)
     {
-        if(input == password)
+        if(input == answer)//AQUI AQUI AQUI AQUI
         {
             DisplayWinScreen();
         }
@@ -155,7 +160,7 @@ public class Hacker : MonoBehaviour {
             play = true;
         }
 
-        Terminal.WriteLine("Enter your password. Hint: " + password.Anagram());
+        Terminal.WriteLine("Enter your password. Hint: " + password);
         Terminal.WriteLine(menuHint);
     }
 
@@ -164,12 +169,18 @@ public class Hacker : MonoBehaviour {
         switch (level) {
             case 1:
                 password = level1Passwords[UnityEngine.Random.Range(0,level1Passwords.Length-1)];
+                position = SearchPosition(password, level1Passwords);
+                answer = answers1[position];
                 break;
             case 2:
                 password = level2Passwords[UnityEngine.Random.Range(0, level2Passwords.Length-1)];
+                position = SearchPosition(password, level2Passwords);
+                answer = answers1[position];
                 break;
             case 3:
                 password = level3Passwords[UnityEngine.Random.Range(0, level3Passwords.Length-1)];
+                position = SearchPosition(password, level3Passwords);
+                answer = answers1[position];
                 break;
             default:
                 Debug.LogError("Invalid level. How did you manage that?");
@@ -177,5 +188,15 @@ public class Hacker : MonoBehaviour {
         }
     }
 
+    private int SearchPosition(string password, string[] levelPasswords)
+    {
+        for(int i = 0; i < levelPasswords.Length; i++){ //Ciclo for
+            if(levelPasswords[i] == password){//Si el valor dentro de esa posicion de vector es igual al valor enviado
+                return i;//Regresara la posicion
+            }           
+        }
+        Terminal.WriteLine("Mistake");
+        return -1;//Sino regresara -1 (posicion que no existe)
+    }
 
 }
